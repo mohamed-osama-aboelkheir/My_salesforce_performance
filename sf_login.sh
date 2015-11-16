@@ -17,7 +17,7 @@ echo "USAGE: `basename $0` [options] args"
 }
 
 SOAP_URL="https://login.salesforce.com/services/Soap/u/34.0"
-REST_URL="https://login.salesforce.com/services/data/v34.0/"
+REST_URL="services/data/v34.0/"
 
 sf_login()
 {
@@ -30,6 +30,7 @@ sf_login()
 			if ! curl -s $REST_URL -H "Authorization: Bearer $SESSION_ID" | grep INVALID_SESSION_ID &> /dev/null 
 			then
 				USER_ID=`grep "<userId>.*</userId>" $OUTPUT | head -1 | sed "s/<userId>\(.*\)<\/userId>/\1/"`
+				REST_URL=`grep "<serverUrl>.*</serverUrl>" $OUTPUT | sed "s/.*\(https:\/\/[^/]*\).*/\1/"`/$REST_URL
 				echo "<< SESSION FOUND >>"
 				return 0
 			fi
@@ -58,6 +59,7 @@ sf_login()
 	then
 		SESSION_ID=`grep "<sessionId>.*</sessionId>" $OUTPUT | sed "s/<sessionId>\(.*\)<\/sessionId>/\1/"`
 		USER_ID=`grep "<userId>.*</userId>" $OUTPUT | head -1 | sed "s/<userId>\(.*\)<\/userId>/\1/"`
+		REST_URL=`grep "<serverUrl>.*</serverUrl>" $OUTPUT | sed "s/.*\(https:\/\/[^/]*\).*/\1/"`/$REST_URL
 		echo "<< LOGIN SUCCESS >>"
 		return 0
 	else
