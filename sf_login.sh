@@ -17,7 +17,7 @@ echo "USAGE: `basename $0` [options] args"
 }
 
 SOAP_URL="https://login.salesforce.com/services/Soap/u/34.0"
-REST_URL="https://na5.salesforce.com/services/data/v34.0/"
+REST_URL="https://login.salesforce.com/services/data/v34.0/"
 
 sf_login()
 {
